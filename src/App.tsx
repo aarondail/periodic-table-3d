@@ -2,9 +2,15 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
+function Test(props: { a: boolean }) {
+  const b = React.useMemo(() => props.a + "", []);
+  return <div>{b}</div>;
+}
+
 function App() {
   return (
     <div className="App">
+      <Test a />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
