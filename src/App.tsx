@@ -1,27 +1,22 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { ThreeJsApp } from "./ThreeJsApp";
 
-function Test(props: { a: boolean }) {
-  const b = React.useMemo(() => props.a + "", []);
-  return <div>{b}</div>;
-}
+function App(): JSX.Element {
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const threeJsContainerRef = React.useRef<ThreeJsApp | null>(null);
 
-function App() {
-  return (
-    <div className="App">
-      <Test a />
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const setCanvas = React.useCallback((e: HTMLCanvasElement | null) => {
+    if (threeJsContainerRef.current) {
+      threeJsContainerRef.current.dispose();
+      threeJsContainerRef.current = null;
+    }
+    canvasRef.current = e;
+    if (canvasRef.current) {
+      threeJsContainerRef.current = new ThreeJsApp(canvasRef.current);
+    }
+  }, []);
+
+  return <canvas id="canvas" ref={setCanvas} />;
 }
 
 export default App;

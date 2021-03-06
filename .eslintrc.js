@@ -6,20 +6,22 @@ module.exports = {
     "prettier",
     "plugin:prettier/recommended",
     "react-app",
-    "react-app/jest"
+    "react-app/jest",
   ],
-  "plugins": ["react", "@typescript-eslint", "jest"],
-  "env": {
+  env: {
     browser: true,
     es6: true,
-    jest: true
+    jest: true,
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
     ecmaFeatures: {
-      jsx: true
-    }
-  }
+      jsx: true,
+    },
+  },
+  rules: {
+    "no-debugger": "off",
+  },
 };
