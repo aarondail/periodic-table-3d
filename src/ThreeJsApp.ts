@@ -35,6 +35,20 @@ export class ThreeJsApp {
     this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.3;
+    this.controls.mouseButtons = {
+      LEFT: THREE.MOUSE.ROTATE,
+      MIDDLE: THREE.MOUSE.DOLLY,
+      RIGHT: THREE.MOUSE.PAN,
+    };
+    this.controls.enablePan = true;
+    this.controls.enableKeys = true;
+    this.controls.keyPanSpeed = 1000.0;
+    this.controls.keys = {
+      LEFT: 37, //left arrow
+      UP: 38, // up arrow
+      RIGHT: 39, // right arrow
+      BOTTOM: 40, // down arrow
+    };
     this.controls.update();
 
     this.mainContainer = new MainContainer(this.vpInfo);
