@@ -57,7 +57,10 @@ export class MainContainer extends THREE.Object3D {
     const l2 = new THREE.AmbientLight(0xffffff, 0.5);
     this.add(l2);
 
-    this.add(new PeriodicTable());
+    const pt = new PeriodicTable();
+    pt.scale.set(0.2, 0.2, 0.2);
+    pt.position.setZ(0.4);
+    this.add(pt);
   }
 
   public dispose(): void {

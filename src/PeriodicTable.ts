@@ -4,38 +4,59 @@ import * as THREE from "three";
 import ELEMENTS from "!!raw-loader!./elements.txt";
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import TABLE from "!!raw-loader!./table.txt";
+import { ElementBlock } from "./ElementBlock";
 
 // There are 18 columns in the periodic table
 const COLUMNS = 18;
 
 export class PeriodicTable extends THREE.Object3D {
-  private symbolToNameMap!: Map<string, string>;
+  private symbolToInfoMap!: Map<string, { name: string; index: number }>;
   private symbolTable!: (string | null)[][];
 
   public constructor() {
     super();
-    // console.log(ELEMENTS);
-    // console.log(TABLE);
-
     // First load the elements and build a map of the symbol to the names...
     this.loadElements();
     // Then load the table
     this.loadTable();
+
+    for (let rowIndex = 0; rowIndex < this.symbolTable.length; rowIndex++) {
+      const row = this.symbolTable[rowIndex];
+      for (let column = 0; column < row.length; column++) {
+        const symbol = row[column];
+        if (!symbol) {
+          continue;
+        }
+        const info = this.symbolToInfoMap.get(symbol);
+        if (!info) {
+          console.warn(`Could not find info for symbol (from table) "${symbol}".`);
+          continue;
+        }
+
+        const mesh = new ElementBlock({
+          name: info.name,
+          symbol,
+          index: info.index,
+        });
+        mesh.position.set((column - 9) * 3.2, -1 * rowIndex * (this.symbolTable.length * 0.75), 0);
+        this.add(mesh);
+      }
+    }
   }
 
   private loadElements() {
-    this.symbolToNameMap = new Map();
+    this.symbolToInfoMap = new Map();
     let lineNumber = 1;
     ELEMENTS.split("\n").forEach((line) => {
       const parts = line.trim().split(/ +/);
       if (parts.length !== 3) {
         console.warn(`Skipping elements.txt line ${lineNumber}: "${line}".`);
       } else {
-        this.symbolToNameMap.set(parts[1], parts[2]);
+        this.symbolToInfoMap.set(parts[1], { name: parts[2], index: parseInt(parts[0], 0) });
       }
       lineNumber++;
     });
-    console.log(this.symbolToNameMap);
+    console.log(this.symbolToInfoMap);
     // symbol to name map
   }
 
