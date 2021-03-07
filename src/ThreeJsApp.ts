@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { MainContainer } from "./MainContainer";
 
+import { MainContainer } from "./MainContainer";
 import { PixelViewPort } from "./PixelViewPort";
 import { Stats } from "./Stats";
 
@@ -20,13 +20,13 @@ export class ThreeJsApp {
     this.disposed = false;
     this.stats = new Stats();
     this.renderer = new THREE.WebGLRenderer({ canvas });
-    this.renderer.setClearColor(0xaa99cc);
+    this.renderer.setClearColor(0x000000);
     this.renderer.physicallyCorrectLights = true;
     this.renderer.info.autoReset = true; // Makes better stats I think
     this.scene = new THREE.Scene();
     this.clock = new THREE.Clock();
     this.camera = new THREE.PerspectiveCamera(40, 2, 0.1, 50000);
-    this.camera.position.set(0, 0, 500);
+    this.camera.position.set(0, 0, 5);
     this.vpInfo = {
       pixelWidth: canvas.clientWidth * window.devicePixelRatio,
       pixelHeight: canvas.clientHeight * window.devicePixelRatio,
