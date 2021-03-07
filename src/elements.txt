@@ -7,3 +7,12 @@
 7 N nitrogen 
 8 O oxygen 
 9 F fluorine 
+10 Ne neon
+11 Na sodium 
+12 Mg Magnesium 
+13 Al aluminum 
+14 si silicone 
+15 P phosphorus 
+16 S sulfur 
+17 Cl chlorine 
+18 Ar argon 
