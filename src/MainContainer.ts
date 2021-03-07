@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { PeriodicTable } from "./PeriodicTable";
 import { PixelViewPort } from "./PixelViewPort";
 
 export class MainContainer extends THREE.Object3D {
@@ -55,6 +56,8 @@ export class MainContainer extends THREE.Object3D {
     this.add(l1);
     const l2 = new THREE.AmbientLight(0xffffff, 0.5);
     this.add(l2);
+
+    this.add(new PeriodicTable());
   }
 
   public dispose(): void {
