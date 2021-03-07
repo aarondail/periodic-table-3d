@@ -18,7 +18,7 @@ export class MainContainer extends THREE.Object3D {
 
     const geo = new THREE.SphereBufferGeometry(0.3, 64, 32);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const makeSphere = (x: number, y: number, color: any) => {
+    const makeSphere = (x: number, y: number, color: any, scale?: number) => {
       const mat = new THREE.MeshStandardMaterial({
         color,
         metalness: 1,
@@ -29,7 +29,7 @@ export class MainContainer extends THREE.Object3D {
       });
       const mesh = new THREE.Mesh(geo, mat);
       mesh.position.set(x, y, Math.random() * -1);
-      const s = 1.0; // Math.random() * 0.4 + 0.6;
+      const s = scale ?? 1.0; // Math.random() * 0.4 + 0.6;
       mesh.scale.set(s, s, s);
       this.add(mesh);
     };
@@ -41,10 +41,10 @@ export class MainContainer extends THREE.Object3D {
     makeSphere(-2, 0, 0x999999); // 0x123456 0 1 2 3 4 5 6 7 8 9 A B C D E F
     makeSphere(-1, -1, "blue");
     makeSphere(-1 / 2, -1 / 2, "green");
-    makeSphere(0, -1, "grey");
-    makeSphere(-1, 0, 0xffff00);
+    makeSphere(0, -1, "grey", 3.3);
+    makeSphere(-1, 0, 0xffff00, 2.9);
     makeSphere(-3, -2, "blue");
-    makeSphere(-3 / 2, -3 / 2, "green");
+    makeSphere(-3 / 2, -3 / 2, "green", 4.2);
     makeSphere(0, -3, "magenta");
     for (let i = -3; i <= 3; i += 1) {
       makeSphere(i, i, 0x33aaff);
