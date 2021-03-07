@@ -42,19 +42,21 @@ export class ElementBlock extends THREE.Object3D {
   public constructor(options: ElementBlockOptions) {
     super();
     const geometry = getGeometry();
-    const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ metalness: 1.0, color: "blue" }));
+    const mesh = new THREE.Mesh(
+      geometry,
+      new THREE.MeshStandardMaterial({ metalness: 1.0, color: "blue", emissive: 0x000022 })
+    );
     this.add(mesh);
 
     const symbolText = new Text();
     symbolText.text = options.symbol;
     symbolText.fontSize = 1;
-    symbolText.position.y = 0.5;
+    symbolText.position.y = 0.2;
     symbolText.position.z = 1.43;
     symbolText.anchorX = "center";
     symbolText.anchorY = "middle";
     symbolText.color = 0xffffff;
 
-    // Update the rendering:
     const nameText = new Text();
     nameText.text = options.name;
     nameText.fontSize = 0.5;
@@ -64,10 +66,22 @@ export class ElementBlock extends THREE.Object3D {
     nameText.anchorY = "middle";
     nameText.color = 0xffffff;
 
+    const indexText = new Text();
+    indexText.text = options.index + "";
+    indexText.fontSize = 0.6;
+    indexText.position.x = -0.9;
+    indexText.position.y = 0.9;
+    indexText.position.z = 1.43;
+    indexText.anchorX = "center";
+    indexText.anchorY = "middle";
+    indexText.color = 0x66aaff;
+
     symbolText.sync();
     nameText.sync();
+    indexText.sync();
 
     this.add(symbolText);
     this.add(nameText);
+    this.add(indexText);
   }
 }
