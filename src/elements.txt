@@ -3,7 +3,7 @@
 3 Li lithium 
 4 Be beryllium 
 5 B boron 
-6 c carbon 
+6 C carbon 
 7 N nitrogen 
 8 O oxygen 
 9 F fluorine 
@@ -11,7 +11,7 @@
 11 Na sodium 
 12 Mg Magnesium 
 13 Al aluminum 
-14 si silicone 
+14 Si silicone 
 15 P phosphorus 
 16 S sulfur 
 17 Cl chlorine 
