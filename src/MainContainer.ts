@@ -50,6 +50,12 @@ export class MainContainer extends THREE.Object3D {
       makeSphere(i, i, 0x33aaff);
       makeSphere(i, -1 * i, 0xffaa33);
     }
+    //for (let i = -10; i <= 10; i += 1) {
+    //for (let j = -10; j <= 10; j += 1) {
+    // makeSphere(i + 0.5, j + 0.5, 0x33ffaa, 2.0);
+    // makeSphere(i, -1 * i, 0xffaa33);
+    // }
+    //}
 
     const l1 = new THREE.DirectionalLight(0xffffff, 9.9);
     l1.position.set(-1000, 0, 1000);

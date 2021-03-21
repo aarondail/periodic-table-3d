@@ -1,5 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
 import { MainContainer } from "./MainContainer";
 import { PixelViewPort } from "./PixelViewPort";
@@ -15,6 +18,7 @@ export class ThreeJsApp {
   private clock: THREE.Clock;
   private disposed: boolean;
   private controls: OrbitControls;
+  private composer: EffectComposer;
 
   public constructor(private readonly canvas: HTMLCanvasElement) {
     this.disposed = false;
@@ -23,10 +27,16 @@ export class ThreeJsApp {
     this.renderer.setClearColor(0x000000);
     this.renderer.physicallyCorrectLights = true;
     this.renderer.info.autoReset = true; // Makes better stats I think
+    this.renderer.toneMapping = THREE.ReinhardToneMapping;
+
     this.scene = new THREE.Scene();
+
     this.clock = new THREE.Clock();
     this.camera = new THREE.PerspectiveCamera(40, 2, 0.1, 50000);
     this.camera.position.set(0, 0, 5);
+
+    this.composer = new EffectComposer(this.renderer);
+
     this.vpInfo = {
       pixelWidth: canvas.clientWidth * window.devicePixelRatio,
       pixelHeight: canvas.clientHeight * window.devicePixelRatio,
@@ -76,7 +86,8 @@ export class ThreeJsApp {
     this.updateRendererSize();
     this.controls.update();
     this.mainContainer.animate(this.clock.getDelta());
-    this.renderer.render(this.scene, this.camera);
+    // this.renderer.render(this.scene, this.camera);
+    this.composer.render();
     this.stats.end(this.renderer);
     this.renderer.info.reset();
     requestAnimationFrame(this.animate);
@@ -95,6 +106,23 @@ export class ThreeJsApp {
       this.renderer.setSize(pw, ph, false);
       this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
       this.camera.updateProjectionMatrix();
+
+      const renderScene = new RenderPass(this.scene, this.camera);
+
+      const bloomPass = new UnrealBloomPass(new THREE.Vector2(pw, ph), 1.5, 0.4, 0.85);
+      bloomPass.threshold = 0; // params.bloomThreshold;
+      bloomPass.strength = 1.5; // params.bloomStrength;
+      bloomPass.radius = 0; // params.bloomRadius;
+      // bloomPass.threshold = params.bloomThreshold;
+      // bloomPass.strength = params.bloomStrength;
+      // bloomPass.radius = params.bloomRadius;
+
+      this.composer = new EffectComposer(this.renderer);
+      this.composer.addPass(renderScene);
+      this.composer.addPass(bloomPass);
+
+      // this.renderer.setSize(pw, ph);
+      // this.composer.setSize(pw, ph);
     }
   }
 }
