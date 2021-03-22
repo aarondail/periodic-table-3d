@@ -52,7 +52,7 @@ export class ElementBlock extends THREE.Object3D {
     symbolText.text = options.symbol;
     symbolText.fontSize = 1;
     symbolText.position.y = 0.2;
-    symbolText.position.z = 1.43;
+    symbolText.position.z = 1.425;
     symbolText.anchorX = "center";
     symbolText.anchorY = "middle";
     symbolText.color = 0xffffff;
@@ -61,7 +61,7 @@ export class ElementBlock extends THREE.Object3D {
     nameText.text = options.name;
     nameText.fontSize = 0.5;
     nameText.position.y = -0.8;
-    nameText.position.z = 1.43;
+    nameText.position.z = 1.425;
     nameText.anchorX = "center";
     nameText.anchorY = "middle";
     nameText.color = 0xffffff;
@@ -71,7 +71,7 @@ export class ElementBlock extends THREE.Object3D {
     indexText.fontSize = 0.6;
     indexText.position.x = -0.9;
     indexText.position.y = 0.9;
-    indexText.position.z = 1.43;
+    indexText.position.z = 1.425;
     indexText.anchorX = "center";
     indexText.anchorY = "middle";
     indexText.color = 0x66aaff;

@@ -110,9 +110,10 @@ export class ThreeJsApp {
       const renderScene = new RenderPass(this.scene, this.camera);
 
       const bloomPass = new UnrealBloomPass(new THREE.Vector2(pw, ph), 1.5, 0.4, 0.85);
-      bloomPass.threshold = 0; // params.bloomThreshold;
-      bloomPass.strength = 1.5; // params.bloomStrength;
-      bloomPass.radius = 0; // params.bloomRadius;
+      bloomPass.threshold = 0.0; // params.bloomThreshold;
+      // bloomPass.strength = 1.5; // params.bloomStrength;
+      bloomPass.strength = 1.0; // params.bloomStrength;
+      bloomPass.radius = 0.2; // params.bloomRadius;
       // bloomPass.threshold = params.bloomThreshold;
       // bloomPass.strength = params.bloomStrength;
       // bloomPass.radius = params.bloomRadius;
