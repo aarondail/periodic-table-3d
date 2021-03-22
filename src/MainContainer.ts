@@ -31,6 +31,8 @@ export class MainContainer extends THREE.Object3D {
       mesh.position.set(x, y, Math.random() * -1);
       const s = scale ?? 1.0; // Math.random() * 0.4 + 0.6;
       mesh.scale.set(s, s, s);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (mesh as any).pickable = true;
       this.add(mesh);
     };
 

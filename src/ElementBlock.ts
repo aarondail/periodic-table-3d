@@ -46,6 +46,8 @@ export class ElementBlock extends THREE.Object3D {
       geometry,
       new THREE.MeshStandardMaterial({ metalness: 1.0, color: "blue", emissive: 0x000022 })
     );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (mesh as any).pickable = true;
     this.add(mesh);
 
     const symbolText = new Text();

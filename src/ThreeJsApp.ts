@@ -5,6 +5,7 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
 import { MainContainer } from "./MainContainer";
+import { Picker } from "./Picker";
 import { PixelViewPort } from "./PixelViewPort";
 import { Stats } from "./Stats";
 
@@ -19,6 +20,9 @@ export class ThreeJsApp {
   private disposed: boolean;
   private controls: OrbitControls;
   private composer: EffectComposer;
+  private picker: Picker;
+  private pickPosition: THREE.Vector2;
+  private pickUpdated: boolean;
 
   public constructor(private readonly canvas: HTMLCanvasElement) {
     this.disposed = false;
@@ -67,6 +71,15 @@ export class ThreeJsApp {
       new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), new THREE.MeshStandardMaterial({ color: 0x0088ff }))
     );
     this.scene.add(this.mainContainer);
+
+    this.picker = new Picker();
+    this.pickPosition = new THREE.Vector2();
+    this.pickUpdated = false;
+
+    canvas.addEventListener("mousemove", this.handleMouseMove);
+    canvas.addEventListener("mouseout", this.handleMouseOutOrLeave);
+    canvas.addEventListener("mouseleave", this.handleMouseOutOrLeave);
+
     requestAnimationFrame(this.animate);
   }
 
@@ -75,6 +88,10 @@ export class ThreeJsApp {
     this.renderer.dispose();
     this.stats.dispose();
     this.mainContainer.dispose();
+
+    this.canvas.removeEventListener("mousemove", this.handleMouseMove);
+    this.canvas.removeEventListener("mouseout", this.handleMouseOutOrLeave);
+    this.canvas.removeEventListener("mouseleave", this.handleMouseOutOrLeave);
   }
 
   private animate = () => {
@@ -85,12 +102,34 @@ export class ThreeJsApp {
     this.stats.begin();
     this.updateRendererSize();
     this.controls.update();
+
+    this.picker.pick(this.pickPosition, this.scene, this.camera);
+
     this.mainContainer.animate(this.clock.getDelta());
     // this.renderer.render(this.scene, this.camera);
     this.composer.render();
     this.stats.end(this.renderer);
     this.renderer.info.reset();
     requestAnimationFrame(this.animate);
+  };
+
+  private handleMouseMove = (event: MouseEvent) => {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) * this.canvas.width) / rect.width;
+    const y = ((event.clientY - rect.top) * this.canvas.height) / rect.height;
+    this.pickPosition.x = (x / this.canvas.width) * 2 - 1;
+    this.pickPosition.y = (y / this.canvas.height) * -2 + 1; // note we flip Y
+    this.pickUpdated = true;
+  };
+
+  private handleMouseOutOrLeave = () => {
+    // unlike the mouse which always has a position
+    // if the user stops touching the screen we want
+    // to stop picking. For now we just pick a value
+    // unlikely to pick something
+    this.pickPosition.x = -100000;
+    this.pickPosition.y = -100000;
+    this.pickUpdated = true;
   };
 
   private updateRendererSize(force?: boolean): void {
