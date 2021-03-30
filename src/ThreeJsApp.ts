@@ -20,6 +20,7 @@ export class ThreeJsApp {
   private disposed: boolean;
   private controls: OrbitControls;
   private composer: EffectComposer;
+  private bloomPass?: UnrealBloomPass;
   private picker: Picker;
   private pickPosition: THREE.Vector2;
   private pickUpdated: boolean;
@@ -103,7 +104,10 @@ export class ThreeJsApp {
     this.updateRendererSize();
     this.controls.update();
 
-    this.picker.pick(this.pickPosition, this.scene, this.camera);
+    if (this.pickUpdated) {
+      this.picker.pick(this.pickPosition, this.scene, this.camera);
+      this.pickUpdated = false;
+    }
 
     this.mainContainer.animate(this.clock.getDelta());
     // this.renderer.render(this.scene, this.camera);
@@ -146,8 +150,9 @@ export class ThreeJsApp {
       this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
       this.camera.updateProjectionMatrix();
 
-      const renderScene = new RenderPass(this.scene, this.camera);
+      this.bloomPass?.dispose();
 
+      const renderScene = new RenderPass(this.scene, this.camera);
       const bloomPass = new UnrealBloomPass(new THREE.Vector2(pw, ph), 1.5, 0.4, 0.85);
       bloomPass.threshold = 0.0; // params.bloomThreshold;
       // bloomPass.strength = 1.5; // params.bloomStrength;
@@ -160,7 +165,6 @@ export class ThreeJsApp {
       this.composer = new EffectComposer(this.renderer);
       this.composer.addPass(renderScene);
       this.composer.addPass(bloomPass);
-
       // this.renderer.setSize(pw, ph);
       // this.composer.setSize(pw, ph);
     }

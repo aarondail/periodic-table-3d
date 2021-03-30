@@ -38,7 +38,7 @@ export class Picker {
         this.pickedObjectSavedColor = (this.pickedObject.material as THREE.MeshStandardMaterial).emissive.getHex();
         // set its emissive color to flashing red/yellow
         // eslint-disable-next-line no-constant-condition
-        (this.pickedObject.material as THREE.MeshStandardMaterial).emissive.setHex(0x333333);
+        (this.pickedObject.material as THREE.MeshStandardMaterial).emissive.setHex(0xac012);
 
         return;
       }
