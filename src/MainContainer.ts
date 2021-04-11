@@ -46,7 +46,7 @@ export class MainContainer extends THREE.Object3D {
     makeSphere(0, -1, "grey", 3.3);
     makeSphere(-1, 0, 0xffff00, 2.9);
     makeSphere(-3, -2, "blue");
-    makeSphere(-3 / 2, -3 / 2, "green", 4.2);
+    makeSphere(-3 / 2, -3 / 2, "green", 3.2);
     makeSphere(0, -3, "magenta");
     for (let i = -3; i <= 3; i += 1) {
       makeSphere(i, i, 0x33aaff);
