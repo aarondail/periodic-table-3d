@@ -47,8 +47,8 @@
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
     "precommit": "lint-staged",
     "postinstall": "husky install",
-    "prepublishOnly": "pint --disable",
-    "postpublish": "pint --enable"
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
   },
   "browserslist": {
     "production": [
