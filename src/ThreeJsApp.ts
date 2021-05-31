@@ -38,7 +38,7 @@ export class ThreeJsApp {
 
     this.clock = new THREE.Clock();
     this.camera = new THREE.PerspectiveCamera(40, 2, 0.1, 50000);
-    this.camera.position.set(0, 0, 5);
+    this.camera.position.set(0, 0, 10);
 
     this.composer = new EffectComposer(this.renderer);
 
@@ -51,9 +51,9 @@ export class ThreeJsApp {
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.3;
     this.controls.mouseButtons = {
-      LEFT: THREE.MOUSE.ROTATE,
+      LEFT: THREE.MOUSE.PAN,
       MIDDLE: THREE.MOUSE.DOLLY,
-      RIGHT: THREE.MOUSE.PAN,
+      RIGHT: THREE.MOUSE.ROTATE,
     };
     this.controls.enablePan = true;
     this.controls.enableKeys = true;
@@ -69,7 +69,16 @@ export class ThreeJsApp {
     this.mainContainer = new MainContainer(this.vpInfo);
     this.updateRendererSize(true);
     this.scene.add(
-      new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), new THREE.MeshStandardMaterial({ color: 0x0088ff }))
+      new THREE.Mesh(
+        new THREE.SphereBufferGeometry(50, 100, 100),
+        new THREE.MeshStandardMaterial({ wireframe: true, color: 0xffffff })
+      )
+    );
+    this.scene.add(
+      new THREE.Mesh(
+        new THREE.SphereBufferGeometry(100, 100, 100),
+        new THREE.MeshStandardMaterial({ wireframe: true, color: 0x0088ff })
+      )
     );
     this.scene.add(this.mainContainer);
 
@@ -157,7 +166,7 @@ export class ThreeJsApp {
       bloomPass.threshold = 0.0; // params.bloomThreshold;
       // bloomPass.strength = 1.5; // params.bloomStrength;
       bloomPass.strength = 1.0; // params.bloomStrength;
-      bloomPass.radius = 0.2; // params.bloomRadius;
+      bloomPass.radius = 0.04; // params.bloomRadius;
       // bloomPass.threshold = params.bloomThreshold;
       // bloomPass.strength = params.bloomStrength;
       // bloomPass.radius = params.bloomRadius;

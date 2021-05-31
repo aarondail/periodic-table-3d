@@ -28,7 +28,7 @@ export class MainContainer extends THREE.Object3D {
         // emissive: 0x333333,
       });
       const mesh = new THREE.Mesh(geo, mat);
-      mesh.position.set(x, y, Math.random() * -1);
+      mesh.position.set(x, y, -1 + Math.random() * -1);
       const s = scale ?? 1.0; // Math.random() * 0.4 + 0.6;
       mesh.scale.set(s, s, s);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,6 +67,7 @@ export class MainContainer extends THREE.Object3D {
 
     const pt = new PeriodicTable();
     pt.scale.set(0.2, 0.2, 0.2);
+    pt.position.setY(1.4);
     pt.position.setZ(0.4);
     this.add(pt);
   }
