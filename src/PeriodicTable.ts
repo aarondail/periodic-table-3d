@@ -9,8 +9,15 @@ import { ElementBlock } from "./ElementBlock";
 // There are 18 columns in the periodic table
 const COLUMNS = 18;
 
+interface Element {
+  atomicNumber: number;
+  atomicNumberRaw: string;
+  symbol: string;
+  label: string;
+}
+
 export class PeriodicTable extends THREE.Object3D {
-  private symbolToInfoMap!: Map<string, { name: string; index: number }>;
+  private symbolToInfoMap!: Map<string, Element>;
   private symbolTable!: (string | null)[][];
 
   public constructor() {
@@ -34,9 +41,9 @@ export class PeriodicTable extends THREE.Object3D {
         }
 
         const mesh = new ElementBlock({
-          name: info.name,
+          name: info.label,
           symbol,
-          index: info.index,
+          atomicNumber: info.atomicNumberRaw,
         });
         mesh.position.set((column - 9) * 3.2, -1 * rowIndex * (this.symbolTable.length * 0.75), 0);
         this.add(mesh);
@@ -49,10 +56,16 @@ export class PeriodicTable extends THREE.Object3D {
     let lineNumber = 1;
     ELEMENTS.split("\n").forEach((line) => {
       const parts = line.trim().split(/ +/);
-      if (parts.length !== 3) {
+      if (parts.length < 3) {
         console.warn(`Skipping elements.txt line ${lineNumber}: "${line}".`);
       } else {
-        this.symbolToInfoMap.set(parts[1], { name: parts[2], index: parseInt(parts[0], 0) });
+        const element: Element = {
+          atomicNumber: parseInt(parts[0], 0),
+          atomicNumberRaw: parts[0],
+          symbol: parts[1],
+          label: parts.slice(2).join(" "),
+        };
+        this.symbolToInfoMap.set(element.symbol, element);
       }
       lineNumber++;
     });

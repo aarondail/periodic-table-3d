@@ -54,7 +54,7 @@
 54 Xe xenon
 55 Cs Cesium
 56 Ba barium 
-57-71 _ lathanids
+57-71 _ lanthanides
 72 Hf Hafnium
 73 Ta Tantalum
 74 W tungsten
@@ -70,3 +70,18 @@
 84 Po polonium
 85 At astatine
 86 Rn radon
+87 Fr Francium
+88 Ra Radium
+89-103 _ actinides
+104 Rf rutherfordium
+105 Db dubnium
+106 Sg seaborgium
+107 Bh bohrium                                                 
+108 Hs hassium
+109 Mt meitnerium
+
+
+
+
+
+

@@ -35,7 +35,7 @@ const getGeometry = (() => {
 export interface ElementBlockOptions {
   symbol: string;
   name: string;
-  index: number;
+  atomicNumber: string;
 }
 
 export class ElementBlock extends THREE.Object3D {
@@ -69,12 +69,12 @@ export class ElementBlock extends THREE.Object3D {
     nameText.color = 0xffffff;
 
     const indexText = new Text();
-    indexText.text = options.index + "";
+    indexText.text = options.atomicNumber;
     indexText.fontSize = 0.6;
-    indexText.position.x = -0.9;
+    indexText.position.x = -1.2;
     indexText.position.y = 0.9;
     indexText.position.z = 1.425;
-    indexText.anchorX = "center";
+    indexText.anchorX = "left";
     indexText.anchorY = "middle";
     indexText.color = 0x66aaff;
 
