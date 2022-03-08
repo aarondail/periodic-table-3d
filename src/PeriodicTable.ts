@@ -1,20 +1,15 @@
 import * as THREE from "three";
 
+import { ElementBlock } from "./ElementBlock";
+import { Element } from "./Element";
+
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import ELEMENTS from "!!raw-loader!./elements.txt";
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import TABLE from "!!raw-loader!./table.txt";
-import { ElementBlock } from "./ElementBlock";
 
 // There are 18 columns in the periodic table
 const COLUMNS = 18;
-
-interface Element {
-  atomicNumber: number;
-  atomicNumberRaw: string;
-  symbol: string;
-  label: string;
-}
 
 export class PeriodicTable extends THREE.Object3D {
   private symbolToInfoMap!: Map<string, Element>;
@@ -40,11 +35,7 @@ export class PeriodicTable extends THREE.Object3D {
           continue;
         }
 
-        const mesh = new ElementBlock({
-          name: info.label,
-          symbol,
-          atomicNumber: info.atomicNumberRaw,
-        });
+        const mesh = new ElementBlock(info);
         mesh.position.set((column - 9) * 3.2, -1 * rowIndex * (this.symbolTable.length * 0.75), 0);
         this.add(mesh);
       }

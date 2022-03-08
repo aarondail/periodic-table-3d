@@ -23,7 +23,7 @@ export class ThreeJsApp {
   private bloomPass?: UnrealBloomPass;
   private picker: Picker;
   private pickPosition: THREE.Vector2;
-  private pickUpdated: boolean;
+  private needToUpdatePicker: boolean;
 
   public constructor(private readonly canvas: HTMLCanvasElement) {
     this.disposed = false;
@@ -84,8 +84,9 @@ export class ThreeJsApp {
 
     this.picker = new Picker();
     this.pickPosition = new THREE.Vector2();
-    this.pickUpdated = false;
+    this.needToUpdatePicker = false;
 
+    canvas.addEventListener("click", this.handleClick);
     canvas.addEventListener("mousemove", this.handleMouseMove);
     canvas.addEventListener("mouseout", this.handleMouseOutOrLeave);
     canvas.addEventListener("mouseleave", this.handleMouseOutOrLeave);
@@ -99,6 +100,7 @@ export class ThreeJsApp {
     this.stats.dispose();
     this.mainContainer.dispose();
 
+    this.canvas.removeEventListener("click", this.handleClick);
     this.canvas.removeEventListener("mousemove", this.handleMouseMove);
     this.canvas.removeEventListener("mouseout", this.handleMouseOutOrLeave);
     this.canvas.removeEventListener("mouseleave", this.handleMouseOutOrLeave);
@@ -113,9 +115,9 @@ export class ThreeJsApp {
     this.updateRendererSize();
     this.controls.update();
 
-    if (this.pickUpdated) {
+    if (this.needToUpdatePicker) {
       this.picker.pick(this.pickPosition, this.scene, this.camera);
-      this.pickUpdated = false;
+      this.needToUpdatePicker = false;
     }
 
     this.mainContainer.animate(this.clock.getDelta());
@@ -126,13 +128,19 @@ export class ThreeJsApp {
     requestAnimationFrame(this.animate);
   };
 
+  private handleClick = (event: MouseEvent) => {
+    if (this.picker.currentPickedObject) {
+      console.log(this.picker.currentPickedObject.pickAction);
+    }
+  };
+
   private handleMouseMove = (event: MouseEvent) => {
     const rect = this.canvas.getBoundingClientRect();
     const x = ((event.clientX - rect.left) * this.canvas.width) / rect.width;
     const y = ((event.clientY - rect.top) * this.canvas.height) / rect.height;
     this.pickPosition.x = (x / this.canvas.width) * 2 - 1;
     this.pickPosition.y = (y / this.canvas.height) * -2 + 1; // note we flip Y
-    this.pickUpdated = true;
+    this.needToUpdatePicker = true;
   };
 
   private handleMouseOutOrLeave = () => {
@@ -142,7 +150,7 @@ export class ThreeJsApp {
     // unlikely to pick something
     this.pickPosition.x = -100000;
     this.pickPosition.y = -100000;
-    this.pickUpdated = true;
+    this.needToUpdatePicker = true;
   };
 
   private updateRendererSize(force?: boolean): void {

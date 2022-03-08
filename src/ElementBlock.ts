@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { Text } from "troika-three-text";
 
+import { Element } from "./Element";
+
 const getGeometry = (() => {
   let geometry: THREE.ExtrudeGeometry;
 
@@ -32,14 +34,8 @@ const getGeometry = (() => {
   };
 })();
 
-export interface ElementBlockOptions {
-  symbol: string;
-  name: string;
-  atomicNumber: string;
-}
-
 export class ElementBlock extends THREE.Object3D {
-  public constructor(options: ElementBlockOptions) {
+  public constructor(element: Element) {
     super();
     const geometry = getGeometry();
     const mesh = new THREE.Mesh(
@@ -48,10 +44,12 @@ export class ElementBlock extends THREE.Object3D {
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (mesh as any).pickable = true;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (mesh as any).pickAction = ["POPUP", element];
     this.add(mesh);
 
     const symbolText = new Text();
-    symbolText.text = options.symbol;
+    symbolText.text = element.symbol;
     symbolText.fontSize = 1;
     symbolText.position.y = 0.2;
     symbolText.position.z = 1.425;
@@ -60,7 +58,7 @@ export class ElementBlock extends THREE.Object3D {
     symbolText.color = 0xffffff;
 
     const nameText = new Text();
-    nameText.text = options.name;
+    nameText.text = element.label;
     nameText.fontSize = 0.5;
     nameText.position.y = -0.8;
     nameText.position.z = 1.425;
@@ -69,7 +67,7 @@ export class ElementBlock extends THREE.Object3D {
     nameText.color = 0xffffff;
 
     const indexText = new Text();
-    indexText.text = options.atomicNumber;
+    indexText.text = element.atomicNumber;
     indexText.fontSize = 0.6;
     indexText.position.x = -1.2;
     indexText.position.y = 0.9;

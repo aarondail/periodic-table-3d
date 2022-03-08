@@ -1,8 +1,16 @@
 import * as THREE from "three";
 
+import { Element } from "./Element";
+
+export interface PickableObject extends THREE.Mesh {
+  readonly pickable: true;
+
+  readonly pickAction: ["POPUP", Element];
+}
+
 export class Picker {
   private readonly raycaster: THREE.Raycaster;
-  private pickedObject?: THREE.Mesh;
+  private pickedObject?: PickableObject;
   private pickedObjectSavedColor: number;
 
   public constructor() {
@@ -11,9 +19,12 @@ export class Picker {
     this.pickedObjectSavedColor = 0;
   }
 
+  public get currentPickedObject(): PickableObject | undefined {
+    return this.pickedObject;
+  }
+
   public pick(normalizedPosition: THREE.Vector2, scene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
-    // console.log(normalizedPosition);
-    // restore the color if there is a picked object
+    // Restore the color if there is a picked object
     if (this.pickedObject) {
       (this.pickedObject.material as THREE.MeshStandardMaterial).emissive.setHex(this.pickedObjectSavedColor);
       this.pickedObject = undefined;
@@ -21,9 +32,10 @@ export class Picker {
 
     // cast a ray through the frustum
     this.raycaster.setFromCamera(normalizedPosition, camera);
+
     // get the list of objects the ray intersected
     const intersectedObjects = this.raycaster.intersectObjects(scene.children, true);
-    console.log(intersectedObjects);
+    // console.log(intersectedObjects);
     if (intersectedObjects.length) {
       // pick the first object. It's the closest one
       for (const potentialObject of intersectedObjects) {
@@ -31,9 +43,9 @@ export class Picker {
         if (!(potentialObject.object as any).pickable) {
           continue;
         }
-        console.log("Found obj", potentialObject);
+        // console.log("Found obj", potentialObject);
 
-        this.pickedObject = potentialObject.object as THREE.Mesh;
+        this.pickedObject = potentialObject.object as PickableObject;
         // save its color
         this.pickedObjectSavedColor = (this.pickedObject.material as THREE.MeshStandardMaterial).emissive.getHex();
         // set its emissive color to flashing red/yellow
