@@ -44,8 +44,8 @@ export class ThreeJsApp {
     this.composer = new EffectComposer(this.renderer);
 
     canvas.addEventListener("mousemove", this.handleMouseMove);
-    canvas.addEventListener("mousedown", () => this.handleMouseDown);
-    canvas.addEventListener("mouseup", () => this.handleMouseUp);
+    canvas.addEventListener("mousedown", this.handleMouseDown);
+    canvas.addEventListener("mouseup", this.handleMouseUp);
     canvas.addEventListener("mouseout", this.handleMouseOutOrLeave);
     canvas.addEventListener("mouseleave", this.handleMouseOutOrLeave);
 
@@ -65,12 +65,6 @@ export class ThreeJsApp {
     this.controls.enablePan = true;
     this.controls.enableKeys = true;
     this.controls.keyPanSpeed = 1000.0;
-    this.controls.keys = {
-      LEFT: 37, //left arrow
-      UP: 38, // up arrow
-      RIGHT: 39, // right arrow
-      BOTTOM: 40, // down arrow
-    };
     this.controls.update();
 
     this.mainContainer = new MainContainer(this.vpInfo, this.resetCamera);
@@ -149,9 +143,7 @@ export class ThreeJsApp {
   };
 
   private handleMouseDown = (event: MouseEvent) => {
-    if (event.button === 1) {
-      this.mouseDownSavedCoords = { clientX: event.clientX, clientY: event.clientY };
-    }
+    this.mouseDownSavedCoords = { clientX: event.clientX, clientY: event.clientY };
   };
 
   private handleMouseMove = (event: MouseEvent) => {
