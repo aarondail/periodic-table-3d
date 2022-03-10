@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { Text } from "troika-three-text";
 
 import { Element } from "./Element";
+import { PickActionType } from "./Picker";
 
 const getGeometry = (() => {
   let geometry: THREE.ExtrudeGeometry;
@@ -45,7 +46,7 @@ export class ElementBlock extends THREE.Object3D {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (mesh as any).pickable = true;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (mesh as any).pickAction = ["POPUP", element];
+    (mesh as any).pickAction = [PickActionType.ELEMENT_DETAIL, element];
     this.add(mesh);
 
     const symbolText = new Text();

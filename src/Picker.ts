@@ -2,10 +2,23 @@ import * as THREE from "three";
 
 import { Element } from "./Element";
 
+export enum PickActionType {
+  ELEMENT_DETAIL,
+  LANTHANIDES,
+  ACTINIDES,
+  BACK,
+}
+
+export type PickAction =
+  | [PickActionType.ELEMENT_DETAIL, Element]
+  | [PickActionType.LANTHANIDES]
+  | [PickActionType.ACTINIDES]
+  | [PickActionType.BACK];
+
 export interface PickableObject extends THREE.Mesh {
   readonly pickable: true;
 
-  readonly pickAction: ["POPUP", Element];
+  readonly pickAction?: PickAction;
 }
 
 export class Picker {

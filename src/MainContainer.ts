@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import { PeriodicTable } from "./PeriodicTable";
+import { PickableObject, PickActionType } from "./Picker";
 import { PixelViewPort } from "./PixelViewPort";
 
 export class MainContainer extends THREE.Object3D {
-  public constructor(private vp: PixelViewPort) {
+  public constructor(private vp: PixelViewPort, private resetCamera: () => void) {
     super();
 
     /*
@@ -13,7 +14,6 @@ export class MainContainer extends THREE.Object3D {
 
     In terms of the scene, perhaps we layout from 0,0 to 1,1 (bl to tr)?
     Maybe switch to -1,-1 to 1,1 at some point
-
     */
 
     const geo = new THREE.SphereBufferGeometry(0.3, 64, 32);
@@ -82,5 +82,17 @@ export class MainContainer extends THREE.Object3D {
 
   public relayout(): void {
     // TODO?
+  }
+
+  public onObjectClicked(object: PickableObject): void {
+    if (!object.pickAction) {
+      return;
+    }
+    const [pickActionType, pickActionArg] = object.pickAction;
+    switch (pickActionType) {
+      case PickActionType.ELEMENT_DETAIL:
+        this.resetCamera();
+        break;
+    }
   }
 }

@@ -24,6 +24,7 @@ export class ThreeJsApp {
   private picker: Picker;
   private pickPosition: THREE.Vector2;
   private needToUpdatePicker: boolean;
+  private mouseDownSavedCoords?: { clientX: number; clientY: number };
 
   public constructor(private readonly canvas: HTMLCanvasElement) {
     this.disposed = false;
@@ -41,6 +42,12 @@ export class ThreeJsApp {
     this.camera.position.set(0, 0, 10);
 
     this.composer = new EffectComposer(this.renderer);
+
+    canvas.addEventListener("mousemove", this.handleMouseMove);
+    canvas.addEventListener("mousedown", () => this.handleMouseDown);
+    canvas.addEventListener("mouseup", () => this.handleMouseUp);
+    canvas.addEventListener("mouseout", this.handleMouseOutOrLeave);
+    canvas.addEventListener("mouseleave", this.handleMouseOutOrLeave);
 
     this.vpInfo = {
       pixelWidth: canvas.clientWidth * window.devicePixelRatio,
@@ -66,7 +73,7 @@ export class ThreeJsApp {
     };
     this.controls.update();
 
-    this.mainContainer = new MainContainer(this.vpInfo);
+    this.mainContainer = new MainContainer(this.vpInfo, this.resetCamera);
     this.updateRendererSize(true);
     this.scene.add(
       new THREE.Mesh(
@@ -86,11 +93,6 @@ export class ThreeJsApp {
     this.pickPosition = new THREE.Vector2();
     this.needToUpdatePicker = false;
 
-    canvas.addEventListener("click", this.handleClick);
-    canvas.addEventListener("mousemove", this.handleMouseMove);
-    canvas.addEventListener("mouseout", this.handleMouseOutOrLeave);
-    canvas.addEventListener("mouseleave", this.handleMouseOutOrLeave);
-
     requestAnimationFrame(this.animate);
   }
 
@@ -100,11 +102,16 @@ export class ThreeJsApp {
     this.stats.dispose();
     this.mainContainer.dispose();
 
-    this.canvas.removeEventListener("click", this.handleClick);
     this.canvas.removeEventListener("mousemove", this.handleMouseMove);
+    this.canvas.removeEventListener("mousedown", this.handleMouseDown);
+    this.canvas.removeEventListener("mouseup", this.handleMouseUp);
     this.canvas.removeEventListener("mouseout", this.handleMouseOutOrLeave);
     this.canvas.removeEventListener("mouseleave", this.handleMouseOutOrLeave);
   }
+
+  public resetCamera = (): void => {
+    this.controls.reset();
+  };
 
   private animate = () => {
     if (this.disposed) {
@@ -128,9 +135,22 @@ export class ThreeJsApp {
     requestAnimationFrame(this.animate);
   };
 
-  private handleClick = (event: MouseEvent) => {
-    if (this.picker.currentPickedObject) {
-      console.log(this.picker.currentPickedObject.pickAction);
+  private handleMouseUp = (event: MouseEvent) => {
+    if (this.picker.currentPickedObject && this.mouseDownSavedCoords) {
+      const xDiff = this.mouseDownSavedCoords.clientX - event.clientX;
+      const yDiff = this.mouseDownSavedCoords.clientY - event.clientY;
+      const totalDiff = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+      console.log(totalDiff);
+      if (totalDiff < 10) {
+        this.mainContainer.onObjectClicked(this.picker.currentPickedObject);
+      }
+    }
+    this.mouseDownSavedCoords = undefined;
+  };
+
+  private handleMouseDown = (event: MouseEvent) => {
+    if (event.button === 1) {
+      this.mouseDownSavedCoords = { clientX: event.clientX, clientY: event.clientY };
     }
   };
 
@@ -151,6 +171,7 @@ export class ThreeJsApp {
     this.pickPosition.x = -100000;
     this.pickPosition.y = -100000;
     this.needToUpdatePicker = true;
+    this.mouseDownSavedCoords = undefined;
   };
 
   private updateRendererSize(force?: boolean): void {
