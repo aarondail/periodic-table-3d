@@ -5,6 +5,11 @@ import { PeriodicTable } from "./PeriodicTable";
 import { PickableObject, PickActionType } from "./Picker";
 import { PixelViewPort } from "./PixelViewPort";
 
+export interface MainContainerCameraControls {
+  resetState: () => void;
+  saveState: () => void;
+  moveToDefault: () => void;
+}
 export class MainContainer extends THREE.Object3D {
   private mainTableContainer: THREE.Object3D;
   private lanthanidesTableContainer: THREE.Object3D;
@@ -14,11 +19,7 @@ export class MainContainer extends THREE.Object3D {
   private showingTable: "main" | "lanthanides" | "actinides";
   private showingElement?: Element;
 
-  public constructor(
-    private vp: PixelViewPort,
-    private readonly resetCamera: () => void,
-    private readonly saveCameraState: () => void
-  ) {
+  public constructor(private vp: PixelViewPort, private readonly cameraControls: MainContainerCameraControls) {
     super();
 
     this.showingTable = "main";
@@ -147,17 +148,18 @@ export class MainContainer extends THREE.Object3D {
     const [pickActionType, pickActionArg] = object.pickAction;
     switch (pickActionType) {
       case PickActionType.ELEMENT_DETAIL:
-        this.saveCameraState();
+        this.cameraControls.saveState();
         this.elementDetailsContainer.visible = true;
         this.actinidesTableContainer.visible = false;
         this.mainTableContainer.visible = false;
         this.lanthanidesTableContainer.visible = false;
 
         this.showingElement = pickActionArg;
-        this.resetCamera();
+        this.cameraControls.moveToDefault();
         break;
+
       case PickActionType.LANTHANIDES:
-        this.resetCamera();
+        // this.resetCamera();
         break;
 
       case PickActionType.BACK:
@@ -172,7 +174,7 @@ export class MainContainer extends THREE.Object3D {
         this.mainTableContainer.visible = this.showingTable === "main";
         this.lanthanidesTableContainer.visible = this.showingTable === "lanthanides";
 
-        this.resetCamera();
+        this.cameraControls.resetState();
         break;
     }
   }

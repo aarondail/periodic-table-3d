@@ -4,7 +4,7 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
-import { MainContainer } from "./MainContainer";
+import { MainContainer, MainContainerCameraControls } from "./MainContainer";
 import { Picker } from "./Picker";
 import { PixelViewPort } from "./PixelViewPort";
 import { Stats } from "./Stats";
@@ -67,9 +67,36 @@ export class ThreeJsApp {
     this.controls.keyPanSpeed = 1000.0;
     this.controls.update();
 
+    const cameraDefaultPosition = {
+      target: new THREE.Vector3(),
+      position: new THREE.Vector3(),
+      zoom: 0,
+    };
+
+    cameraDefaultPosition.target.copy(this.controls.target);
+    cameraDefaultPosition.position.copy(this.camera.position);
+    cameraDefaultPosition.zoom = this.camera.zoom;
+
+    const cameraControls = {
+      resetState: () => {
+        this.controls.reset();
+      },
+      saveState: () => {
+        this.controls.saveState();
+      },
+      moveToDefault: () => {
+        this.controls.target.copy(cameraDefaultPosition.target);
+        this.camera.position.copy(cameraDefaultPosition.position);
+        this.camera.zoom = cameraDefaultPosition.zoom;
+
+        this.camera.updateProjectionMatrix();
+
+        this.controls.update();
+      },
+    };
+
     // TODO save/restore camera state
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    this.mainContainer = new MainContainer(this.vpInfo, this.resetCamera, () => {});
+    this.mainContainer = new MainContainer(this.vpInfo, cameraControls);
     this.updateRendererSize(true);
     this.scene.add(
       new THREE.Mesh(
@@ -104,10 +131,6 @@ export class ThreeJsApp {
     this.canvas.removeEventListener("mouseout", this.handleMouseOutOrLeave);
     this.canvas.removeEventListener("mouseleave", this.handleMouseOutOrLeave);
   }
-
-  public resetCamera = (): void => {
-    this.controls.reset();
-  };
 
   private animate = () => {
     if (this.disposed) {
