@@ -67,7 +67,9 @@ export class ThreeJsApp {
     this.controls.keyPanSpeed = 1000.0;
     this.controls.update();
 
-    this.mainContainer = new MainContainer(this.vpInfo, this.resetCamera);
+    // TODO save/restore camera state
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    this.mainContainer = new MainContainer(this.vpInfo, this.resetCamera, () => {});
     this.updateRendererSize(true);
     this.scene.add(
       new THREE.Mesh(
@@ -134,7 +136,7 @@ export class ThreeJsApp {
       const xDiff = this.mouseDownSavedCoords.clientX - event.clientX;
       const yDiff = this.mouseDownSavedCoords.clientY - event.clientY;
       const totalDiff = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-      console.log(totalDiff);
+      // console.log(totalDiff);
       if (totalDiff < 10) {
         this.mainContainer.onObjectClicked(this.picker.currentPickedObject);
       }
